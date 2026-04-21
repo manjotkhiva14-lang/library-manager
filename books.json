@@ -1,0 +1,20 @@
+[
+    {
+        "tittle": "trading in the zone",
+        "bookauthor": "jack d",
+        "bookid": 1212,
+        "available": false
+    },
+    {
+        "tittle": "the new trading ",
+        "bookauthor": "frost",
+        "bookid": 1313,
+        "available": true
+    },
+    {
+        "tittle": "python game",
+        "bookauthor": "coder h ",
+        "bookid": 1414,
+        "available": false
+    }
+]
