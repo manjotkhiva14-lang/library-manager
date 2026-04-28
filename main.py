@@ -1,9 +1,10 @@
-
+from rich import print 
 from library import Library
 lib=Library()
 lib.load_books()
 lib.load_users()
 while True:
+    print("[bold blue]LIBRARY MANAGEMENT[/bold blue]")
     print("1.add book")
     print("2.add user")
     print("3.issue book")
@@ -11,9 +12,13 @@ while True:
     print("5.show books")
     print("6.show users")
     print("7. exit")
-
-    x=input("ENTER YOUR CHOICE")
-
+    try:
+        x=input("ENTER YOUR CHOICE")
+        if x in [1,2,3,4,5,6,7]:
+            break
+    except ValueError:
+        print("Invalid choice. Please enter the number.")
+    
     if x=="1":
         lib.add_book()
         lib.save_books()
@@ -35,5 +40,5 @@ while True:
     elif x=="7":
         print("program exited")
         break
-else:
-    print("INVALID CHOICE")
+    else:
+        print("INVALID CHOICE")

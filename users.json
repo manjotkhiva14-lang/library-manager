@@ -1,16 +1,12 @@
 [
     {
-        "name": "manjot singh",
-        "userid": 4455,
-        "borrowed books": [
-            1212
-        ]
+        "name": "manjot",
+        "userid": 1212,
+        "borrowed books": []
     },
     {
-        "name": "sukhwinder singh",
-        "userid": 5566,
-        "borrowed books": [
-            1414
-        ]
+        "name": "manjot",
+        "userid": 1313,
+        "borrowed books": []
     }
 ]

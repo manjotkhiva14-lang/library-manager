@@ -6,61 +6,109 @@ class Library:
     def __init__(self):
         self.books=[]
         self.users=[]
-
+    def get_valid_int(self,prompt):
+        while True:
+            try:
+                value = int(input(prompt))
+                if value <= 0:
+                    print("Enter the valid number")
+                    continue
+                return value
+            except ValueError:
+                print("Invalid input. Enter the number")
+    def get_valid_string(self,prompt):
+        while True:
+            value = input(prompt).strip()
+            if value == "" :
+                print("empty input")
+                continue
+            return value
     def add_book(self):
-        tittle=input("enter the tittle of the book")
-        author=input("enter the author of the book")
-        bookid=int(input("enter the id of the book"))
-        book= Book(tittle,author,bookid)
+        while True:
+            title= self.get_valid_string("enter the title of the book")
+            if any(book.title.lower() == title.lower() for book in self.books):
+                print("This book title already exits")
+                continue
+            break
+        author= self.get_valid_string("enter the author of the book")
+        while True:
+            bookid=self.get_valid_int("enter the id of the book")
+            if any(book.bookid == bookid for book in self.books):
+                print("This book id is not available. Try another")
+                continue
+            break
+        book= Book(title,author,bookid)
         self.books.append(book)
 
 
     def add_user(self):
-        user=input("enter the name of the user")
-        userid=int(input("enter the id of the user"))
+        user=self.get_valid_string("enter the name of the user")
+        while True:
+            userid=self.get_valid_int("enter the id of the user")
+            if any(user.userid == userid for user in self.users):
+                print("This user id is not available. Try another")
+                continue
+            break
         user= User(user,userid)
         self.users.append(user)
 
     def issue_book(self):
-        id=int(input("enter the id of the book you want to issue"))
-        userid=int(input("enter the user id to whom you want to issue book"))
+        id=self.get_valid_int("enter the id of the book you want to issue")
+        userid=self.get_valid_int("enter the user id to whom you want to issue book")
         bf= None
-        uf= None
         for book in self.books:
             if book.bookid==id:
                 bf = book
+                break
+        if bf is None:
+            print("Book not found")
+            return
+        if not bf.available:
+            print("Book is already issued")
+            return
+        uf= None
         for user in self.users:
             if user.userid==userid:
                 uf = user
-        if bf and uf:
-            uf.borrowedbooks.append(bf)
-            bf.available=False
-            print(f"the book {bf.tittle} is isuued to {uf.name}")
-        else:
-            print("invalid input")
+                break
+        if uf is None:
+            print("User not found")
+            return
+        uf.borrowedbooks.append(bf)
+        bf.available=False
+        print(f"the book {bf.title} is isuued to {uf.name}")
     def return_book(self):
-        id=int(input("enter the id of the book"))
-        userid=int(input("enter the user id to whom you want to issue book"))
+        id=self.get_valid_int("enter the id of the book")
+        userid=self.get_valid_int("enter the user id ")
         bf= None
-        uf= None
         for book in self.books:
             if book.bookid==id:
                 bf = book
+                break
+        if bf is None:
+            print("Book not found")
+            return
+        if bf.available:
+            print("Book is already returned")
+            return
+        uf = None
         for user in self.users:
             if user.userid==userid:
                 uf = user
-        if bf and uf:
-            uf.borrowedbooks.remove(bf)
-            bf.available=True
-            print(f"the book {bf.tittle} is returned by {uf.name}")
-        else:
-            print("invalid input")
+                break
+        if uf is None:
+            print("User not found")
+            return
+        uf.borrowedbooks.remove(bf)
+        bf.available=True
+        print(f"the book {bf.title} is returned by {uf.name}")
+    
     def show_books(self):
         if not self.books:
             print("no books available")
             return
         for book in self.books:
-            print(f"Name : {book.tittle}")
+            print(f"Name : {book.title}")
             print(f"Author name:{book.bookauthor}")
             print(f"Id : {book.bookid}")
             print(f"Available:{book.available}")
@@ -74,15 +122,15 @@ class Library:
             if user.borrowedbooks:
                 print("Borrowed books are:")
                 for book in user.borrowedbooks:
-                    print(f" {book.tittle}")
+                    print(f" {book.title}")
             else:
-                print("Borrowed books:one")
+                print("Borrowed books:none")
     def save_books(self):
         data=[]
 
         for book in self.books:
             data.append({
-                "tittle":book.tittle,
+                "title":book.title,
                 "bookauthor":book.bookauthor,
                 "bookid":book.bookid,
                 "available":book.available
@@ -97,7 +145,7 @@ class Library:
                 books = json.load(file)
                
             for b in books:
-                book=Book(b["tittle"], b["bookauthor"], b["bookid"])
+                book=Book(b["title"], b["bookauthor"], b["bookid"])
                 book.available=b["available"]
                 self.books.append(book)
             print("Books loaded successfully")
@@ -136,6 +184,6 @@ class Library:
                     if book:
                         user.borrowedbooks.append(book)
                 self.users.append(user)
-            print("users loaded")
+            print("users loaded successfully")
         except FileNotFoundError:
             print("no file found")
